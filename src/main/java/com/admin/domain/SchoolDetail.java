@@ -17,8 +17,8 @@ public class SchoolDetail {
 	private Address address;
 	private ContactDetail contact;
 	private String dealStatus;
-/*	@DBRef
-	private UserDetail user;*/
+	@DBRef
+	private UserDetail userDetail;
 	public String getName() {
 		return name;
 	}
@@ -55,14 +55,17 @@ public class SchoolDetail {
 	public void setContact(ContactDetail contact) {
 		this.contact = contact;
 	}
-
-	
-
-/*	public UserDetail getUser() {
-		return user;
+	public UserDetail getUserDetail() {
+		return userDetail;
+	}
+	public void setUserDetail(UserDetail userDetail) {
+		this.userDetail = userDetail;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	public void setUser(UserDetail user) {
-		this.user = user;
-	}*/
 }

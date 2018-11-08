@@ -10,26 +10,32 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 
 
 @Document(collection="user_details")
 public class UserDetail {
 	
-	@Id
-	private String id;
+	/*@Id
+	@JsonIgnore
+	private String id;*/
 	private String firstName;
 	private String lastName;
-	@Field("user_email")
+/*	@Field("user_email")*/
+	@Id
 	private String email;
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 	@Transient
 	@JsonIgnore
 	private String retypePassword;
+	@JsonIgnore
 	private Date creationDate=new Date();
 	
 	private String userStatus="created";
-	
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private List<Role> roles;
 	
 	public String getFirstName() {
@@ -87,13 +93,6 @@ public class UserDetail {
 		this.userStatus = userStatus;
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public List<Role> getRoles() {
 		return roles;
