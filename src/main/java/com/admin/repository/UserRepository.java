@@ -10,10 +10,9 @@ import com.admin.domain.UserDetail;
 @Repository
 public interface UserRepository extends MongoRepository<UserDetail, String>{
 
-	UserDetail findByEmailAndPassword(String email,String password);
+	UserDetail findByPhoneNoAndPassword(String phoneNo,String password);
 	
-	UserDetail findByEmail(String email);
+	UserDetail findByPhoneNo(String email);
 	
-	boolean existsByEmail(String email);
 	
 }

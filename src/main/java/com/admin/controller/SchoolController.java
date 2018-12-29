@@ -42,7 +42,7 @@ public class SchoolController {
                     .getSubject();
 		
         UserDetail userDetail=new UserDetail();
-        userDetail.setEmail(user);
+      //  userDetail.setEmail(user);
 		schoolDetail.setUserDetail(userDetail);
 		schoolRepository.save(schoolDetail);
 		response.setResponseObject(null);
@@ -61,7 +61,7 @@ public class SchoolController {
                     .getSubject();
 		
         UserDetail userDetail=new UserDetail();
-        userDetail.setEmail(user);
+       // userDetail.setEmail(user);
 		schoolDetail.setUserDetail(userDetail);
 		schoolRepository.save(schoolDetail);
 		response.setResponseObject(null);
