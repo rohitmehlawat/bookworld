@@ -21,7 +21,7 @@ public class UserDetail {
 	private String firstName;
 	private String lastName;
 	@Id
-	private String phoneNo;
+	private String email;
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 	@Transient
@@ -49,7 +49,13 @@ public class UserDetail {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	
 	public String getPassword() {
 		return password;
@@ -90,14 +96,6 @@ public class UserDetail {
 
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
-	}
-
-	public String getPhoneNo() {
-		return phoneNo;
-	}
-
-	public void setPhoneNo(String phoneNo) {
-		this.phoneNo = phoneNo;
 	}
 
 	

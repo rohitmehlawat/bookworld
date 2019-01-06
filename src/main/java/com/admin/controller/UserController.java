@@ -28,6 +28,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
 @RestController
+@RequestMapping("/admin")
 public class UserController {
 
 	@Autowired
@@ -40,9 +41,16 @@ public class UserController {
 	public ResponseUtil<String> register(@RequestBody UserDetail user) {
 		ResponseUtil<String> response=new ResponseUtil<>();
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		userRepository.save(user);
-		response.setStatus("success");
-		response.setResponseObject(null);
+		user=userRepository.save(user);
+		if(user!=null) {
+			response.setStatus("success");
+			response.setResponseObject("successfully registered");
+		}
+		else {
+			response.setStatus("failure");
+			response.setResponseObject("could not register");
+		}
+		
 		return response;
 	}
 	
@@ -63,7 +71,7 @@ public class UserController {
                     .verify(token.replace(TOKEN_PREFIX, ""))
                     .getSubject();
         
-        response.setResponseObject(userRepository.findByPhoneNo(user));
+        response.setResponseObject(userRepository.findByEmail(user));
         response.setStatus("success");
 		return response;
 	}

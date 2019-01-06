@@ -9,4 +9,5 @@ import com.admin.domain.Employee;
 public interface EmployeeRepository extends MongoRepository<Employee, String> {
 
 	
+	Employee findByPhoneNo(String phoneNo);
 }

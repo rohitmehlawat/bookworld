@@ -10,5 +10,7 @@ import com.admin.domain.SchoolDetail;
 @Repository
 public interface SchoolRepository extends MongoRepository<SchoolDetail, String> {
 	
+	List<SchoolDetail> findByAssignedEmp(String empId);
+	
 
 }

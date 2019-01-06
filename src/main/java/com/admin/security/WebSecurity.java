@@ -16,6 +16,8 @@ import org.springframework.context.annotation.Bean;
 
 import static com.admin.security.SecurityConstants.SIGN_UP_URL;
 
+import static com.admin.security.SecurityConstants.SIGN_UP_URL_EMPLOYEE;;
+
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
     private UserDetailsServiceImpl userDetailsService;
@@ -28,11 +30,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+    	
         http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
+                .antMatchers(HttpMethod.POST, SIGN_UP_URL,SIGN_UP_URL_EMPLOYEE).permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
+                .addFilter(getJWTAuthenticationFilterAdmin())
+                .addFilter(getJWTAuthenticationFilterEmployee())                
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
                 // this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -41,6 +45,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
+
+        
     }
 
   @Bean
@@ -55,4 +61,19 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
     return source;
   }
+  
+  
+  public JWTAuthenticationFilterAdmin getJWTAuthenticationFilterAdmin() throws Exception {
+      final JWTAuthenticationFilterAdmin filter = new JWTAuthenticationFilterAdmin(authenticationManager());
+      filter.setFilterProcessesUrl("/admin/login");
+      return filter;
+  }
+  
+
+  public JWTAuthenticationFilterEmployee getJWTAuthenticationFilterEmployee() throws Exception {
+      final JWTAuthenticationFilterEmployee filter = new JWTAuthenticationFilterEmployee(authenticationManager());
+      filter.setFilterProcessesUrl("/employee/login");
+      return filter;
+  }
+  
 }

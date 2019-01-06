@@ -1,6 +1,7 @@
 package com.admin.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,28 +18,23 @@ public class EmployeeController {
 	@Autowired
 	EmployeeRepository employeeRepository;
 	
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
 	@PostMapping("/register")
 	public ResponseUtil<String> register(@RequestBody Employee employee) {
 		ResponseUtil<String> response=new ResponseUtil<>();
+		employee.setPassword(bCryptPasswordEncoder.encode(employee.getPassword()));
 		employee=employeeRepository.save(employee);	
 		if(employee!=null) {
 			response.setStatus("success");
-			response.setResponseObject(null);
+			response.setResponseObject("successfully registered");
 		}
 		else {
 			response.setStatus("failure");
-			response.setResponseObject(null);
+			response.setResponseObject("could not register");
 		}
 		
-		return response;
-		
-	}
-	
-	@PostMapping("/login")
-	public ResponseUtil<String> login(@RequestBody String phoneNo, String password ) {
-		ResponseUtil<String> response=new ResponseUtil<>();
-		response.setStatus("success");
-		response.setResponseObject(null);
 		return response;
 		
 	}

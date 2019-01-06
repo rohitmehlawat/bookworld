@@ -2,6 +2,8 @@ package com.admin.domain;
 
 
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -19,6 +21,12 @@ public class SchoolDetail {
 	private String dealStatus;
 	@DBRef
 	private UserDetail userDetail;
+	
+	@DBRef
+	private Employee assignedEmp;
+	
+	private VisitStatus visitStatus;
+	
 	public String getName() {
 		return name;
 	}
@@ -66,6 +74,18 @@ public class SchoolDetail {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public Employee getAssignedEmp() {
+		return assignedEmp;
+	}
+	public void setAssignedEmp(Employee assignedEmp) {
+		this.assignedEmp = assignedEmp;
+	}
+	public VisitStatus getVisitStatus() {
+		return visitStatus;
+	}
+	public void setVisitStatus(VisitStatus visitStatus) {
+		this.visitStatus = visitStatus;
 	}
 
 }
