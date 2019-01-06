@@ -8,6 +8,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Document(collection="school_details")
 public class SchoolDetail {
 
@@ -20,9 +22,11 @@ public class SchoolDetail {
 	private ContactDetail contact;
 	private String dealStatus;
 	@DBRef
+	@JsonIgnore
 	private UserDetail userDetail;
 	
 	@DBRef
+	@JsonIgnore
 	private Employee assignedEmp;
 	
 	private VisitStatus visitStatus;
