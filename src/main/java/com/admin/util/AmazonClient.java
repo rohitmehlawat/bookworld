@@ -44,10 +44,6 @@ public class AmazonClient {
 			this.secretKey=ac.decryptText(this.secretKey, publicKey);
 			this.bucketName=ac.decryptText(this.bucketName, publicKey);
 			
-/*			this.accessKey="AKIAIDBYXWY5JIYRXWHA";
-			this.secretKey="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";
-			this.bucketName="uploaderbucket";*/
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
