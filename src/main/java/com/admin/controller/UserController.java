@@ -65,14 +65,16 @@ public class UserController {
 	@GetMapping("/getUser")
 	public ResponseUtil<UserDetail> getUser(HttpServletRequest request){
 		ResponseUtil<UserDetail> response=new ResponseUtil<>();
-		String token = request.getHeader(HEADER_STRING);
-        String user = JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
-                    .build()
-                    .verify(token.replace(TOKEN_PREFIX, ""))
-                    .getSubject();
+		String user = (String) request.getAttribute("user");
+		if(user.contains("@")) {
+			response.setResponseObject(userRepository.findByEmail(user));
+	        response.setStatus("success");
+		}
+		else {
+			response.setResponseObject(null);
+	        response.setStatus("failure");
+		}
         
-        response.setResponseObject(userRepository.findByEmail(user));
-        response.setStatus("success");
 		return response;
 	}
 	

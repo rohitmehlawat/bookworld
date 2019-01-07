@@ -5,6 +5,7 @@ import static com.admin.security.SecurityConstants.SECRET;
 import static com.admin.security.SecurityConstants.TOKEN_PREFIX;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,14 +18,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.admin.domain.Employee;
 import com.admin.domain.SchoolDetail;
 import com.admin.domain.UserDetail;
 import com.admin.domain.VisitStatus;
+import com.admin.exception.CustomException;
 import com.admin.repository.EmployeeRepository;
 import com.admin.repository.SchoolRepository;
+import com.admin.util.AmazonClient;
 import com.admin.util.ResponseUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -34,10 +40,13 @@ import com.auth0.jwt.algorithms.Algorithm;
 public class SchoolController {
 
 	@Autowired
-	SchoolRepository schoolRepository;
+	private AmazonClient amazonClient;
 	
 	@Autowired
-	EmployeeRepository employeeRepository;
+	private SchoolRepository schoolRepository;
+	
+	@Autowired
+	private EmployeeRepository employeeRepository;
 
 	@PostMapping("/addSchool")
 	public ResponseUtil<String> addSchoolDetail(@RequestBody SchoolDetail schoolDetail, HttpServletRequest request) {
@@ -88,7 +97,13 @@ public class SchoolController {
 		if(schoolDetail.isPresent() && assignedEmp.isPresent()) {
 			schoolDetail.get().setAssignedEmp(assignedEmp.get());
 			schoolRepository.save(schoolDetail.get());
+			response.setResponseObject("school assigned to employee");
+			response.setStatus("success");
 		}	
+		else {
+			response.setResponseObject("school not assigned to employee");
+			response.setStatus("failure");
+		}
 		return response;
 	}
 	
@@ -103,12 +118,26 @@ public class SchoolController {
 	}
 	
 	// for Android
-	@PutMapping(value="/schollVist/{schoolId}")
-	public ResponseUtil<String> updateSchoolVist(@PathVariable("schoolId") String schoolId, @RequestBody VisitStatus visitStatus){
+	@PutMapping(value="/schoollVist/{schoolId}")
+	public ResponseUtil<String> updateSchoolVist(@PathVariable("schoolId") String schoolId,@RequestPart(value = "image") MultipartFile file, @RequestParam Map<String,Object> mapObject){
+		
 		ResponseUtil<String> response=new ResponseUtil<>();
+		VisitStatus visitStatus=null;
+		try {
+		visitStatus=new VisitStatus().asMap(mapObject);
+		}
+		catch(CustomException e) {
+			e.printStackTrace();
+			response.setStatus("failure");
+			response.setResponseObject(e.getMessage());	
+			return response;
+		}
 		Optional<SchoolDetail> school=schoolRepository.findById(schoolId);
-		if(school==null) {
+		if(school!=null) {
+			String url=this.amazonClient.uploadFile(file);
+			visitStatus.setImageUrl(url);
 			school.get().setVisitStatus(visitStatus);
+			schoolRepository.save(school.get());
 			response.setStatus("success");
 			response.setResponseObject("school visit status updated");
 		}
